@@ -2,8 +2,8 @@
 //  TPMultiImageDownloader.h
 //  ChangNet
 //
-//  Created by HZ on 16/6/15.
-//  Copyright © 2016年 SCHH. All rights reserved.
+//  Created by len on 16/6/15.
+//  Copyright © 2016年 letout.cc. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
