@@ -20,3 +20,15 @@
 	}];
     
 创建一个TPMultiImageDownloader对象，使用`downloadImagesWithURLs:success:failure:`方法来下载图片，传入NSURL数组或者URL字符串数组。
+
+# TPMultiImageDownloader
+基于AFNetworking的多图上传
+
+使用方法
+
+	[[[TPMultiImageUploader alloc] init] upload:photos completion:^(NSArray *urls){
+		DLog(@"图片上传成功");
+	} failure:^(NSError *error) {
+		DLog(@"上传失败了");
+	}];
+上传失败：当有一张图失败，取消其他所有上传，回调失败。
