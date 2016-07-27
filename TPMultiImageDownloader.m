@@ -2,8 +2,8 @@
 //  TPMultiImageDownloader.m
 //  ChangNet
 //
-//  Created by len on 16/6/15.
-//  Copyright © 2016年 letout.cc. All rights reserved.
+//  Created by HZ on 16/6/15.
+//  Copyright © 2016年 SCHH. All rights reserved.
 //
 
 #import "TPMultiImageDownloader.h"
@@ -13,6 +13,7 @@
 @interface TPMultiImageDownloader()
 @property (nonatomic, strong) NSMutableArray<AFImageDownloadReceipt *> *activeImageDownloadReceipts;
 @property (nonatomic, strong) NSMutableArray *downloadImages;
+@property (nonatomic, strong) NSMutableArray *downloadFieldURL;
 @end
 
 @implementation TPMultiImageDownloader
@@ -44,6 +45,7 @@
     self = [super init];
     if (self) {
         self.downloadImages = [NSMutableArray array];
+        self.downloadFieldURL = [NSMutableArray array];
         self.activeImageDownloadReceipts = [NSMutableArray array];
     }
     return self;
@@ -51,24 +53,30 @@
 
 - (void)downloadImagesWithURLs:(NSArray *)urls
                       success:(void (^)(NSArray<UIImage *> *images))success
-                      failure:(void (^)(NSError *error))failure
+                      failure:(void (^)(NSArray *errors))failure
 {
+    dispatch_group_t group = dispatch_group_create();
     __weak __typeof(&*self)weakSelf = self;
     [urls enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        dispatch_group_enter(group);
         [self downloadImageURL:obj success:^(UIImage *image) {
             [weakSelf.downloadImages addObject:image];
             // download completion
-            if (weakSelf.downloadImages.count >= urls.count) {
-                if (success) {
-                    success(self.downloadImages);
-                }
-            }
+            dispatch_group_leave(group);
+            
         } failure:^(NSError *error) {
-            if (failure) {
-                failure(error);
-            }
+            [weakSelf.downloadFieldURL addObject:error];
+            dispatch_group_leave(group);
         }];
     }];
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        if (success) {
+            success(self.downloadImages);
+        }
+        if (failure) {
+            failure(self.downloadFieldURL);
+        }
+    });
 }
 
 - (void)downloadImageURL:(id)url
