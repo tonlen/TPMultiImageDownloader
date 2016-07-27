@@ -3,6 +3,7 @@
 
 使用方法
 
+	__weak __typeof(&*self)weakSelf = self;
 	[[[TPMultiImageDownloader alloc] init] downloadImagesWithURLs:array success:^(NSArray<UIImage *> *images) {
 		__typeof__(self)strongSelf = weakSelf;
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
