@@ -21,7 +21,7 @@
     
 创建一个TPMultiImageDownloader对象，使用`downloadImagesWithURLs:success:failure:`方法来下载图片，传入NSURL数组或者URL字符串数组。
 
-# TPMultiImageDownloader
+# TPMultiImageUploader
 基于AFNetworking的多图上传
 
 使用方法
